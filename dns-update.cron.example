@@ -1,0 +1,1 @@
+*/2 * * * * pi /home/pi/cloudflare-ddns/dns-update.sh cf870c0a67d3b0d1589fb85b83bcb708 e2738a8ec6f281f86cde704fa814a7db ddns.cecchisandrone.net cecchisandrone@gmail.com bd5d58a5f35d50f97a3baf5db789af4a6938c
