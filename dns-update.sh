@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Inspired to https://willwarren.com/2014/07/03/roll-dynamic-dns-service-using-amazon-route53
 
 # (optional) You might need to set your PATH variable at the top here
@@ -32,11 +31,22 @@ function valid_ip()
     return $stat
 }
 
+function truncate_log() {
+
+    # Truncate log file
+    SIZE=$(wc -l < $LOGFILE)
+    echo $SIZE
+    if [ "$SIZE" -gt "$LOGFILE_LIMIT" ]; then
+        echo "$(tail -$LOGFILE_LIMIT $LOGFILE)" > $LOGFILE
+    fi
+}
+
 # Get current dir
 # (from http://stackoverflow.com/a/246128/920350)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 LOGFILE="$DIR/cloudflare-ddns.log"
 IPFILE="$DIR/cached_ip"
+LOGFILE_LIMIT=1000000
 
 echo "$(date): ZONEID: $ZONEID - RECORDID: $RECORDID - DNS: $DNS - AUTH_EMAIL: $AUTH_EMAIL - AUTH_KEY: $AUTH_KEY" >> "$LOGFILE"
 
@@ -52,8 +62,8 @@ if [ ! -f "$IPFILE" ]
 fi
 
 if grep -Fxq "$IP" "$IPFILE"; then
-    # code if found
     echo "$(date): IP is still $IP. Skipping" >> "$LOGFILE"
+    truncate_log
     exit 0
 else
     echo "$(date): IP has changed to $IP, updating it on Cloudflare" >> "$LOGFILE"
@@ -71,3 +81,5 @@ fi
 
 # All Done - cache the IP address for next time
 echo "$IP" > "$IPFILE"
+
+truncate_log
