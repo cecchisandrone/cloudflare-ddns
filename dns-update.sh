@@ -46,7 +46,7 @@ function truncate_log() {
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 LOGFILE="$DIR/cloudflare-ddns.log"
 IPFILE="$DIR/cached_ip"
-LOGFILE_LIMIT=1000000
+LOGFILE_LIMIT=1000
 
 echo "$(date): ZONEID: $ZONEID - RECORDID: $RECORDID - DNS: $DNS - AUTH_EMAIL: $AUTH_EMAIL - AUTH_KEY: $AUTH_KEY" >> "$LOGFILE"
 
